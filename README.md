@@ -1,0 +1,2 @@
+OpenCoinage Wallet
+==================
