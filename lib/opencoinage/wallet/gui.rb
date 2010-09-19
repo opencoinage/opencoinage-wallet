@@ -12,8 +12,8 @@ module OpenCoinage::Wallet
     # The application.
     class Application < Qt::Application
       ORGANIZATION_DOMAIN = 'opencoinage.org'
-      ORGANIZATION_NAME   = tr("OpenCoinage.org")
-      APPLICATION_NAME    = tr("OpenCoinage Wallet")
+      ORGANIZATION_NAME   = 'OpenCoinage.org'
+      APPLICATION_NAME    = 'Wallet'
 
       ##
       # Executes the application using the given command-line arguments.
@@ -24,6 +24,18 @@ module OpenCoinage::Wallet
       # @return [void]
       def self.exec!(argv, &block)
         self.new(argv, &block).exec
+      end
+
+      ##
+      # Returns the application settings.
+      #
+      # On Mac OS X, the application settings are stored in the plist file
+      # `~/Library/Preferences/org.opencoinage.Wallet.plist`.
+      #
+      # @return [Qt::Settings]
+      # @see    http://doc.qt.nokia.com/4.6/qsettings.html#platform-specific-notes
+      def self.settings
+        @settings ||= Qt::Settings.new
       end
 
       ##
@@ -48,6 +60,10 @@ module OpenCoinage::Wallet
     ##
     # The application's main window.
     class MainWindow < Qt::MainWindow
+      DEFAULT_POS  = [200, 200]
+      DEFAULT_SIZE = [640, 480]
+      WINDOW_TITLE = tr('OpenCoinage Wallet')
+
       ##
       # Initializes the main window.
       #
@@ -55,7 +71,7 @@ module OpenCoinage::Wallet
       # @yieldparam [MainWindow] window
       def initialize(&block)
         super
-        self.window_title   = Application::APPLICATION_NAME
+        self.window_title   = WINDOW_TITLE
         self.central_widget = Qt::Frame.new do
           Qt::HBoxLayout.new(self) do
             add_widget(CurrencyView.new)
@@ -65,7 +81,7 @@ module OpenCoinage::Wallet
         create_menus
         create_toolbars
         create_status_bar
-        resize(640, 480)
+        read_settings
       end
 
     protected
@@ -112,7 +128,7 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_status_bar
-        status_bar.show_message(tr("Ready."))
+        status_bar.show_message(tr("Ready"))
       end
 
       ##
@@ -121,9 +137,31 @@ module OpenCoinage::Wallet
       # @param  [Qt::CloseEvent] event
       # @return [void]
       def close_event(event)
+        write_settings
         event.accept
       end
       alias_method :closeEvent, :close_event
+
+      ##
+      # Restores the main window's position and size from the application
+      # settings.
+      #
+      # @return [void]
+      def read_settings
+        move(Application.settings.value('pos', Qt::Variant.new(Qt::Point.new(*DEFAULT_POS))).to_point) # TODO: center on the screen
+        resize(Application.settings.value('size', Qt::Variant.new(Qt::Size.new(*DEFAULT_SIZE))).to_size)
+      end
+
+      ##
+      # Stores the main window's position and size in the application
+      # settings.
+      #
+      # @return [void]
+      def write_settings
+        Application.settings.set_value('pos', Qt::Variant.new(pos))
+        Application.settings.set_value('size', Qt::Variant.new(size))
+        Application.settings.sync
+      end
     end # MainWindow
 
     ##
