@@ -16,13 +16,12 @@ Dependencies
 
 ### Platform
 
-The CLI application requires the [Ruby][] language runtime and runs on any
-platform supported by Ruby.
+The CLI application requires the [Ruby][] language runtime as well as the
+[SQLite][] database engine, and runs on any platform supported by Ruby.
 
-The GUI application requires the [Qt4][Qt] framework, the [Ruby][] language
-runtime, and the [QtRuby][] bindings. It runs on the Mac OS X, Linux, and
-Windows operating systems, or on any other system satisfying the
-aforementioned dependencies.
+The GUI application requires in addition the [Qt4][Qt] framework and the
+[QtRuby][] bindings. It runs on the Mac OS X, Linux, and Windows operating
+systems, or on any other system satisfying these dependencies.
 
 Download
 --------
@@ -89,5 +88,6 @@ see <http://unlicense.org/> or the accompanying `UNLICENSE` file.
 [Qt]:          http://qt.nokia.com/
 [QtRuby]:      http://en.wikipedia.org/wiki/QtRuby
 [Qt bindings]: http://rubygems.org/gems/qtbindings
+[SQLite]:      http://sqlite.org/
 [CLI]:         http://en.wikipedia.org/wiki/Command-line_interface
 [GUI]:         http://en.wikipedia.org/wiki/Graphical_user_interface
