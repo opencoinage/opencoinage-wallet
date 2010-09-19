@@ -11,8 +11,8 @@ module OpenCoinage::Wallet
     ##
     # The application.
     class Application < Qt::Application
-      ORGANIZATION_NAME = tr('OpenCoinage.org')
-      APPLICATION_NAME  = tr('OpenCoinage Wallet')
+      ORGANIZATION_NAME = tr("OpenCoinage.org")
+      APPLICATION_NAME  = tr("OpenCoinage Wallet")
 
       ##
       # Executes the application using the given command-line arguments.
@@ -65,7 +65,15 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_actions
-        # TODO
+        # About box
+        @about_action = Qt::Action.new(tr("&About..."), self) do
+          self.status_tip = tr("Show information about the application.")
+          connect(SIGNAL(:triggered)) do
+            Qt::MessageBox.about(nil,
+              tr("About the OpenCoinage Wallet"),
+              tr("Visit <a href='http://opencoinage.org/'>OpenCoinage.org</a> for more information."))
+          end
+        end
       end
 
       ##
@@ -73,11 +81,12 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_menus
-        @file_menu     = menu_bar.add_menu(tr('&File'))
-        @currency_menu = menu_bar.add_menu(tr('&Currency'))
-        @token_menu    = menu_bar.add_menu(tr('&Token'))
+        @file_menu     = menu_bar.add_menu(tr("&File"))
+        @currency_menu = menu_bar.add_menu(tr("&Currency"))
+        @token_menu    = menu_bar.add_menu(tr("&Token"))
         menu_bar.add_separator
-        @help_menu     = menu_bar.add_menu(tr('&Help'))
+        @help_menu     = menu_bar.add_menu(tr("&Help"))
+        @help_menu.add_action(@about_action)
       end
 
       ##
@@ -93,7 +102,7 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_status_bar
-        status_bar.show_message(tr('Ready.'))
+        status_bar.show_message(tr("Ready."))
       end
 
       ##
