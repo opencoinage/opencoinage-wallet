@@ -11,8 +11,9 @@ module OpenCoinage::Wallet
     ##
     # The application.
     class Application < Qt::Application
-      ORGANIZATION_NAME = tr("OpenCoinage.org")
-      APPLICATION_NAME  = tr("OpenCoinage Wallet")
+      ORGANIZATION_DOMAIN = 'opencoinage.org'
+      ORGANIZATION_NAME   = tr("OpenCoinage.org")
+      APPLICATION_NAME    = tr("OpenCoinage Wallet")
 
       ##
       # Executes the application using the given command-line arguments.
@@ -33,9 +34,14 @@ module OpenCoinage::Wallet
       # @yieldparam [Application] app
       def initialize(argv, &block)
         super
-        self.organization_name = ORGANIZATION_NAME
-        self.application_name  = APPLICATION_NAME
-        MainWindow.new.show
+        self.organization_name   = ORGANIZATION_NAME
+        self.organization_domain = ORGANIZATION_DOMAIN
+        self.application_name    = APPLICATION_NAME
+        self.application_version = VERSION.to_s
+        self.active_window       = MainWindow.new do
+          self.show
+          self.activate_window
+        end
       end
     end
 
@@ -50,7 +56,11 @@ module OpenCoinage::Wallet
       def initialize(&block)
         super
         self.window_title   = Application::APPLICATION_NAME
-        self.central_widget = CurrencyView.new
+        self.central_widget = Qt::Frame.new do
+          Qt::HBoxLayout.new(self) do
+            add_widget(CurrencyView.new)
+          end
+        end
         create_actions
         create_menus
         create_toolbars
