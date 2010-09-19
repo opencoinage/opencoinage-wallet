@@ -61,24 +61,36 @@ module OpenCoinage::Wallet
     protected
 
       ##
+      # Creates the main window's actions.
+      #
       # @return [void]
       def create_actions
         # TODO
       end
 
       ##
+      # Creates the main window's menu bar.
+      #
       # @return [void]
       def create_menus
-        # TODO
+        @file_menu     = menu_bar.add_menu(tr('&File'))
+        @currency_menu = menu_bar.add_menu(tr('&Currency'))
+        @token_menu    = menu_bar.add_menu(tr('&Token'))
+        menu_bar.add_separator
+        @help_menu     = menu_bar.add_menu(tr('&Help'))
       end
 
       ##
+      # Creates the main window's toolbar.
+      #
       # @return [void]
       def create_toolbars
         # TODO
       end
 
       ##
+      # Creates the main window's status bar.
+      #
       # @return [void]
       def create_status_bar
         # TODO
