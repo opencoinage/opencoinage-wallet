@@ -93,7 +93,7 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_status_bar
-        # TODO
+        status_bar.show_message(tr('Ready.'))
       end
     end # MainWindow
 
