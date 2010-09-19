@@ -95,6 +95,16 @@ module OpenCoinage::Wallet
       def create_status_bar
         status_bar.show_message(tr('Ready.'))
       end
+
+      ##
+      # Invoked when the main window is about to be closed.
+      #
+      # @param  [Qt::CloseEvent] event
+      # @return [void]
+      def close_event(event)
+        event.accept
+      end
+      alias_method :closeEvent, :close_event
     end # MainWindow
 
     ##
