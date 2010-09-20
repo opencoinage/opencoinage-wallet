@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby -rubygems
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
+require 'Qt4'
+
+Qt::Application.new(ARGV) do |app|
+  Qt::Widget.new do |window|
+    window.window_title = "OpenCoinage Wallet"
+    window.resize(320, 240)
+    window.show
+  end
+  app.exec
+end

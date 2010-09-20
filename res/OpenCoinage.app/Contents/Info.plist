@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+
+  <key>CFBundleIdentifier</key>
+  <string>org.opencoinage.Wallet</string>
+
+  <key>CFBundleDisplayName</key>
+  <string>OpenCoinage Wallet</string>
+
+  <key>CFBundleName</key>
+  <string>Wallet</string>
+
+  <key>CFBundleShortVersionString</key>
+  <string>0.0.0</string>
+
+  <key>CFBundleVersion</key>
+  <string>0.0.0</string>
+
+  <key>CFBundleIconFile</key>
+  <string>HotCocoa.icns</string>
+
+  <key>CFBundleExecutable</key>
+  <string>bin/ocwqt</string>
+
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+
+  <key>CSResourcesFileMappedBoolean</key>
+  <true/>
+</dict>
+</plist>
