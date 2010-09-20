@@ -11,5 +11,7 @@ module OpenCoinage
     autoload :CLI,     'opencoinage/wallet/cli'
     autoload :GUI,     'opencoinage/wallet/gui'
     autoload :VERSION, 'opencoinage/wallet/version'
+
+    HOME = File.expand_path(ENV['OPENCOINAGE_HOME'] || '~/.opencoinage')
   end
 end
