@@ -85,16 +85,16 @@ module OpenCoinage::Wallet
           self.status_tip = tr("Show information about the application.")
           connect(SIGNAL(:triggered)) do
             Qt::MessageBox.about(nil,
-              tr("About the wallet"),
+              tr("About the Wallet"),
               tr("Visit <a href='http://opencoinage.org/'>OpenCoinage.org</a> for more information."))
           end
         end
 
         # Currency > Import file dialog
-        @import_file_action = Qt::Action.new(tr("Import from &file..."), self) do
+        @import_file_action = Qt::Action.new(tr("Import from &File..."), self) do
           self.status_tip = tr("Import a currency contract from a file.")
           connect(SIGNAL(:triggered)) do
-            if file = app.open_file_dialog(caption = tr("Import currency"))
+            if file = app.open_file_dialog(caption = tr("Import Currency"))
               app.not_implemented_yet(caption) # TODO
             end
           end
@@ -104,9 +104,25 @@ module OpenCoinage::Wallet
         @import_url_action = Qt::Action.new(tr("Import from &URL..."), self) do
           self.status_tip = tr("Import a currency contract from a URL.")
           connect(SIGNAL(:triggered)) do
-            if url = app.get_text(caption = tr("Import currency"), tr("Enter a currency URL:"), :text => "http://")
+            if url = app.get_text(caption = tr("Import Currency"), tr("Enter a currency URL:"), :text => "http://")
               app.not_implemented_yet(caption) # TODO
             end
+          end
+        end
+
+        # Token > Verify dialog
+        @verify_action = Qt::Action.new(tr("&Verify..."), self) do
+          self.status_tip = tr("Verify the selected tokens with the issuer.")
+          connect(SIGNAL(:triggered)) do
+            app.not_implemented_yet(caption = tr("Verifying Tokens")) # TODO: progress dialog
+          end
+        end
+
+        # Token > Reissue dialog
+        @reissue_action = Qt::Action.new(tr("&Reissue..."), self) do
+          self.status_tip = tr("Reissue the selected tokens with the issuer.")
+          connect(SIGNAL(:triggered)) do
+            app.not_implemented_yet(caption = tr("Reissuing Tokens")) # TODO: progress dialog
           end
         end
       end
@@ -121,6 +137,8 @@ module OpenCoinage::Wallet
         @currency_menu.add_action(@import_file_action)
         @currency_menu.add_action(@import_url_action)
         @token_menu    = menu_bar.add_menu(tr("&Token"))
+        @token_menu.add_action(@verify_action)
+        @token_menu.add_action(@reissue_action)
         menu_bar.add_separator
         @help_menu     = menu_bar.add_menu(tr("&Help"))
         @help_menu.add_action(@about_action)
