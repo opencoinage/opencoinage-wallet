@@ -2,8 +2,9 @@ module OpenCoinage::Wallet
   module GUI
     ##
     # The currency tokens model.
-    class TokenModel < TableModel
-      COLUMNS = [] # TODO
+    class TokenModel < GridModel
+      HEADERS = [tr("Amount"), tr("Expires"), tr("ID")]
+      COLUMNS = [:amount, :expires, :id]
 
       ##
       # The list of tokens.
@@ -18,34 +19,7 @@ module OpenCoinage::Wallet
       # @yield  [model]
       # @yieldparam [TokenModel] model
       def initialize(tokens, &block)
-        super(&block)
-        @tokens = tokens
-      end
-
-      ##
-      # Returns the list of columns.
-      #
-      # @return [Array<String>]
-      def columns
-        COLUMNS
-      end
-
-      ##
-      # Returns the list of rows.
-      #
-      # @return [Array<Array>]
-      def rows
-        tokens
-      end
-
-      ##
-      # Returns the data at the intersection of `row` and `column`.
-      #
-      # @param  [Integer] row
-      # @param  [Integer] column
-      # @return [String]
-      def [](row, column)
-        super # TODO
+        super(@tokens = tokens, &block)
       end
     end # TokenModel
   end # GUI
