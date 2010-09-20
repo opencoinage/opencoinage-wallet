@@ -74,7 +74,7 @@ module OpenCoinage::Wallet
         self.window_title   = WINDOW_TITLE
         self.central_widget = Qt::Frame.new do
           Qt::HBoxLayout.new(self) do
-            add_widget(CurrencyView.new)
+            add_widget(CurrencyView.new(nil)) # TODO: model
           end
         end
         create_actions
@@ -165,14 +165,31 @@ module OpenCoinage::Wallet
     end # MainWindow
 
     ##
+    # A base class for table views.
+    class TableView < Qt::TableView
+      ##
+      # Initializes the table view with the given `model`.
+      #
+      # @param  [Object] model
+      # @yield  [view]
+      # @yieldparam [TableView] view
+      def initialize(model = nil, &block)
+        super(&block)
+        self.model = model if model
+        self.vertical_header.hide
+        self.horizontal_header.stretch_last_section = true
+      end
+    end # TableView
+
+    ##
     # The currency view.
-    class CurrencyView < Qt::TableView
+    class CurrencyView < TableView
       # TODO
     end # CurrencyView
 
     ##
     # The currency-specific tokens view.
-    class TokenView < Qt::TableView
+    class TokenView < TableView
       # TODO
     end # TokenView
   end # GUI
