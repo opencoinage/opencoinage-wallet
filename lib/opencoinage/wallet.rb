@@ -13,5 +13,21 @@ module OpenCoinage
     autoload :VERSION, 'opencoinage/wallet/version'
 
     HOME = File.expand_path(ENV['OPENCOINAGE_HOME'] || '~/.opencoinage')
-  end
-end
+
+    CURRENCIES = [
+      {
+        :issuer => 'OpenCoinage.org',
+        :asset  => 'cows',
+        :unit   => 'cow',
+      },
+    ]
+
+    ##
+    # Returns the list of known currencies.
+    #
+    # @return [Array<Currency>]
+    def self.currencies
+      CURRENCIES # FIXME
+    end
+  end # Wallet
+end # OpenCoinage
