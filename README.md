@@ -47,6 +47,18 @@ If you haven't yet got [Qt][] and the [QtRuby][] bindings, you will need to
 install them as well before you can make use of the GUI application. The CLI
 application does not need these additional dependencies.
 
+### Mac OS X
+
+TODO: MacPorts installation instructions go here
+
+### Debian and Ubuntu Linux
+
+TODO: Debian/Ubuntu-specific installation instructions go here
+
+### Windows
+
+TODO: Windows prebuilt binary using [OCRA](http://ocra.rubyforge.org/)
+
 Uninstallation
 --------------
 
