@@ -15,9 +15,28 @@ module OpenCoinage::Wallet
       def initialize(&block)
         super
         self.window_title   = WINDOW_TITLE
-        self.central_widget = Qt::Frame.new do
-          Qt::HBoxLayout.new(self) do
-            add_widget(CurrencyView.new)
+        self.central_widget = Qt::Frame.new do |frame|
+          frame.layout = Qt::VBoxLayout.new do |outer|
+            outer.margin  = 9
+            outer.spacing = 6
+            outer.add_widget(Qt::GroupBox.new do |group|
+              group.title  = tr("Currencies")
+              group.layout = Qt::VBoxLayout.new do |inner|
+                inner.margin  = 9
+                inner.spacing = 6
+                inner.add_widget(CurrencyView.new)
+                inner.add_stretch(1)
+              end
+            end)
+            outer.add_widget(Qt::GroupBox.new do |group|
+              group.title  = tr("Tokens")
+              group.layout = Qt::VBoxLayout.new do |inner|
+                inner.margin  = 9
+                inner.spacing = 6
+                inner.add_widget(TokenView.new)
+                inner.add_stretch(1)
+              end
+            end)
           end
         end
         create_actions

@@ -13,7 +13,8 @@ module OpenCoinage::Wallet
         super(&block)
         self.model = model if model
         self.vertical_header.hide
-        self.horizontal_header.stretch_last_section = true
+        #self.horizontal_header.stretch_last_section = true # FIXME: this segfaults
+        self.selection_mode     = Qt::AbstractItemView::SingleSelection
         self.selection_behavior = Qt::AbstractItemView::SelectRows
       end
     end # TableView
