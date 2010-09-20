@@ -84,6 +84,50 @@ module OpenCoinage::Wallet
         read_settings
       end
 
+      ##
+      # Prompts the user for text input.
+      #
+      # @param  [String] caption
+      # @param  [String] prompt
+      # @param  [Hash] options
+      # @option options [String] :parent (nil)
+      # @option options [String] :mode (Qt::LineEdit::Normal)
+      # @option options [String] :text ('')
+      # @return [String]
+      # @see    http://doc.trolltech.com/4.6/qinputdialog.html#getText
+      def get_text(caption, prompt, options = {})
+        Qt::InputDialog.getText(options[:parent], caption, prompt,
+          options[:mode] || Qt::LineEdit::Normal,
+          options[:text] || '')
+      end
+
+      ##
+      # Prompts the user for a file name.
+      #
+      # @param  [String] caption
+      # @param  [String] dir
+      # @param  [Hash] options
+      # @option options [String] :parent (nil)
+      # @option options [String] :filter ('')
+      # @option options [String] :selected_filter ('')
+      # @return [String]
+      # @see    http://doc.trolltech.com/4.6/qfiledialog.html#getOpenFileName
+      def open_file_dialog(caption, dir = '', options = {})
+        Qt::FileDialog.getOpenFileName(options[:parent], caption, dir,
+          options[:filter] || '',
+          options[:selected_filter] || '')
+      end
+
+      ##
+      # Displays a "not implemented yet" dialog box with the given
+      # `caption`.
+      #
+      # @param  [String] caption
+      # @return [void]
+      def not_implemented_yet(caption)
+        Qt::MessageBox.information(nil, caption, tr("This operation is not implemented yet."))
+      end
+
     protected
 
       ##
@@ -91,16 +135,39 @@ module OpenCoinage::Wallet
       #
       # @return [void]
       def create_actions
-        # About box
+        app = self
+
+        # Help > About box
         @about_action = Qt::Action.new(tr("&About..."), self) do
           self.status_tip = tr("Show information about the application.")
           connect(SIGNAL(:triggered)) do
             Qt::MessageBox.about(nil,
-              tr("About the OpenCoinage Wallet"),
+              tr("About the wallet"),
               tr("Visit <a href='http://opencoinage.org/'>OpenCoinage.org</a> for more information."))
           end
         end
-      end
+
+        # Currency > Import file dialog
+        @import_file_action = Qt::Action.new(tr("Import from &file..."), self) do
+          self.status_tip = tr("Import a currency contract from a file.")
+          connect(SIGNAL(:triggered)) do
+            if file = app.open_file_dialog(caption = tr("Import currency"))
+              app.not_implemented_yet(caption) # TODO
+            end
+          end
+        end
+
+        # Currency > Import URL dialog
+        @import_url_action = Qt::Action.new(tr("Import from &URL..."), self) do
+          self.status_tip = tr("Import a currency contract from a URL.")
+          connect(SIGNAL(:triggered)) do
+            if url = app.get_text(caption = tr("Import currency"), tr("Enter a currency URL:"), :text => "http://")
+              app.not_implemented_yet(caption) # TODO
+            end
+          end
+        end
+     end
+
 
       ##
       # Creates the main window's menu bar.
@@ -109,6 +176,8 @@ module OpenCoinage::Wallet
       def create_menus
         @file_menu     = menu_bar.add_menu(tr("&File"))
         @currency_menu = menu_bar.add_menu(tr("&Currency"))
+        @currency_menu.add_action(@import_file_action)
+        @currency_menu.add_action(@import_url_action)
         @token_menu    = menu_bar.add_menu(tr("&Token"))
         menu_bar.add_separator
         @help_menu     = menu_bar.add_menu(tr("&Help"))
