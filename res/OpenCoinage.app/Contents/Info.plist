@@ -34,5 +34,8 @@
 
   <key>CSResourcesFileMappedBoolean</key>
   <true/>
+
+  <key>LSMinimumSystemVersion</key>
+  <string>10.4.0</string>
 </dict>
 </plist>
