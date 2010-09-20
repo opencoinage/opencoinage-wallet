@@ -10,6 +10,7 @@ module OpenCoinage::Wallet
   module GUI
     autoload :Application,   'opencoinage/wallet/gui/application'
     autoload :MainWindow,    'opencoinage/wallet/gui/main_window'
+    autoload :GridModel,     'opencoinage/wallet/gui/grid_model'
     autoload :TableModel,    'opencoinage/wallet/gui/table_model'
     autoload :TableView,     'opencoinage/wallet/gui/table_view'
     autoload :CurrencyModel, 'opencoinage/wallet/gui/currency_model'
