@@ -1,9 +1,13 @@
-require 'opencoinage' # @see http://rubygems.org/gems/opencoinage
+begin
+  require 'opencoinage' # @see http://rubygems.org/gems/opencoinage
+rescue LoadError
+  abort "OpenCoinage Wallet requires the OpenCoinage gem (hint: `gem install opencoinage')."
+end
 
 begin
-  require 'sqlite3'   # @see http://rubygems.org/gems/sqlite3-ruby
+  require 'sqlite3'     # @see http://rubygems.org/gems/sqlite3-ruby
 rescue LoadError
-  abort "OpenCoinage requires the SQLite3/Ruby gem (hint: `gem install sqlite3-ruby')."
+  abort "OpenCoinage Wallet requires the SQLite3/Ruby gem (hint: `gem install sqlite3-ruby')."
 end
 
 module OpenCoinage
