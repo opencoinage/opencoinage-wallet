@@ -2,4 +2,4 @@
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 require 'opencoinage/wallet'
 
-Process.detach(fork { OpenCoinage::Wallet::GUI::Application.exec!(ARGV) })
+OpenCoinage::Wallet::GUI::Application.exec!(ARGV)
