@@ -8,6 +8,8 @@ eletronic wallet for digital cash. It includes two programs:
 * `ocwqt` is a [GUI][] application using the [Qt][] cross-platform UI
   framework.
 
+<http://opencoinage.org/apps/wallet>
+
 _Note: this is at present pre-alpha software, and is unlikely to be of much
 interest to you. Check back later!_
 
