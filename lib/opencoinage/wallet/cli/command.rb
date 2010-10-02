@@ -36,5 +36,24 @@ module OpenCoinage::Wallet::CLI
     def debug?
       !!options[:debug]
     end
+
+    ##
+    # Returns the directory path to `ENV['OPENCOINAGE_HOME']`.
+    #
+    # @return [Pathname]
+    # @see    OpenCoinage::Wallet::HOME
+    def home
+      Pathname(OpenCoinage::Wallet::HOME)
+    end
+
+    ##
+    # Executes this command with the given command-line `arguments`.
+    #
+    # @param  [Array<String>] arguments
+    #   Any command-line arguments to this command.
+    # @return [void]
+    def execute(*arguments)
+      raise NotImplementedError, "#{self.class}#execute"
+    end
   end # Command
 end # OpenCoinage::Wallet::CLI
