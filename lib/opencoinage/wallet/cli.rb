@@ -1,4 +1,5 @@
 require 'optparse'
+require 'pathname'
 
 module OpenCoinage::Wallet
   ##
