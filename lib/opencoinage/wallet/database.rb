@@ -112,7 +112,7 @@ module OpenCoinage::Wallet
     #
     # @return [Integer] a positive integer
     def version
-      raise NotImplementedError, "#{self.class}#version" # TODO
+      @db.send(:get_int_pragma, 'user_version')
     end
 
     ##
@@ -123,8 +123,10 @@ module OpenCoinage::Wallet
     # @return [Integer] a positive integer
     # @raise  [ArgumentError] if `value` is negative
     def version=(value)
-      raise ArgumentError, "expected a valid schema version, got #{value.to_i}" if value.to_i < 0
-      raise NotImplementedError, "#{self.class}#version=" # TODO
+      value = value.to_i
+      raise ArgumentError, "expected a valid schema version, got #{value}" if value < 0
+      @db.send(:set_int_pragma, 'user_version', value)
+      value
     end
 
     ##

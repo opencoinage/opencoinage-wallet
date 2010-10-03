@@ -65,27 +65,37 @@ describe OpenCoinage::Wallet::Database do
 
   context "Database#version" do
     it "returns an integer" do
-      pending do # TODO
-        Database.new.version.should be_an Integer
-      end
+      Database.new.version.should be_an Integer
+    end
+
+    it "returns zero for new databases" do
+      Database.new.version.should == 0
     end
 
     it "returns the database version" do
-      pending # TODO
+      Database.new do |db|
+        db.version.should == 0
+        db.execute("PRAGMA user_version = 42;")
+        db.version.should == 42
+      end
     end
   end
 
   context "Database#version=" do
     it "raises ArgumentError if the value is negative" do
-      pending # TODO
+      lambda { Database.new.version = -1 }.should raise_error(ArgumentError)
     end
 
     it "returns an integer" do
-      pending # TODO
+      (Database.new.version = 1).should be_an Integer
     end
 
-    it "sets the database version" do
-      pending # TODO
+    it "sets and returns the database version" do
+      Database.new do |db|
+        db.version.should == 0
+        (db.version = 42).should == 42
+        db.version.should == 42
+      end
     end
   end
 
