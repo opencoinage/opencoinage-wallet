@@ -44,11 +44,8 @@ module OpenCoinage::Wallet
       @options[:filename] ||= ':memory:'
 
       @db = SQLite3::Database.new(@options[:filename])
-      execute(%q(PRAGMA encoding      = "UTF-8";))
-      execute(%q(PRAGMA foreign_keys  = ON;))
-      execute(%q(PRAGMA secure_delete = ON;))
-      execute(%q(PRAGMA synchronous   = FULL;))
-      Schema.create(self)
+      initialize_pragmas!
+      initialize_schema! unless initialized?
 
       block.call(self) if block_given?
     end
@@ -130,6 +127,22 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Returns `true` if this database has not yet been initialized.
+    #
+    # @return [Boolean] `true` or `false`
+    def initialized?
+      !(version.zero?)
+    end
+
+    ##
+    # Returns `true` if this database is devoid of data.
+    #
+    # @return [Boolean] `true` or `false`
+    def empty?
+      !(initialized?) # FIXME
+    end
+
+    ##
     # Executes an SQL query on this database.
     #
     # @param  [String] sql
@@ -179,6 +192,27 @@ module OpenCoinage::Wallet
     def tokens(options = {}, &block)
       raise NotImplementedError, "#{self.class}#tokens" # TODO
       enum_for(:tokens, options)
+    end
+
+  protected
+
+    ##
+    # Initializes the database connection.
+    #
+    # @return [void]
+    def initialize_pragmas!
+      execute(%q(PRAGMA encoding      = "UTF-8";))
+      execute(%q(PRAGMA foreign_keys  = ON;))
+      execute(%q(PRAGMA secure_delete = ON;))
+      execute(%q(PRAGMA synchronous   = FULL;))
+    end
+
+    ##
+    # Initializes the database schema.
+    #
+    # @return [void]
+    def initialize_schema!
+      Schema.create(self)
     end
 
     ##

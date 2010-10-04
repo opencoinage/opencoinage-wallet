@@ -99,6 +99,24 @@ describe OpenCoinage::Wallet::Database do
     end
   end
 
+  context "Database#initialized?" do
+    # TODO
+  end
+
+  context "Database#empty?" do
+    it "returns true for new databases" do
+      pending # TODO
+    end
+
+    it "returns true for empty databases" do
+      pending # TODO
+    end
+
+    it "returns false for non-empty databases" do
+      pending # TODO
+    end
+  end
+
   context "Database#execute" do
     # TODO
   end
