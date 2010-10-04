@@ -63,6 +63,34 @@ describe OpenCoinage::Wallet::Database do
     end
   end
 
+  context "Database#readable?" do
+    it "returns true if the database file is readable" do
+      pending # TODO
+    end
+
+    it "returns false if the database file is not readable" do
+      pending # TODO
+    end
+
+    it "returns true for in-memory databases" do
+      Database.new.should be_readable
+    end
+  end
+
+  context "Database#writable?" do
+    it "returns true if the database file is writable" do
+      pending # TODO
+    end
+
+    it "returns false if the database file is not writable" do
+      pending # TODO
+    end
+
+    it "returns true for in-memory databases" do
+      Database.new.should be_writable
+    end
+  end
+
   context "Database#version" do
     it "returns an integer" do
       Database.new.version.should be_an Integer

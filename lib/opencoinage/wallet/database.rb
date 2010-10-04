@@ -94,9 +94,29 @@ module OpenCoinage::Wallet
     #
     # @return [Boolean] `true` or `false`
     def exists?
-      filename && filename.exist?
+      persistent? && (filename && filename.exist?)
     end
     alias_method :exist?, :exists?
+
+    ##
+    # Returns `true` if the database file is readable.
+    #
+    # For transient in-memory databases, returns `true`.
+    #
+    # @return [Boolean] `true` or `false`
+    def readable?
+      transient? || (filename && filename.readable?)
+    end
+
+    ##
+    # Returns `true` if the database file is writable.
+    #
+    # For transient in-memory databases, returns `true`.
+    #
+    # @return [Boolean] `true` or `false`
+    def writable?
+      transient? || (filename && filename.writable?)
+    end
 
     ##
     # The database's schema version.
