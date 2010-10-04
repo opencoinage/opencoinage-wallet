@@ -42,11 +42,9 @@ module OpenCoinage::Wallet
     def initialize(options = {}, &block)
       @options = options.dup
       @options[:filename] ||= ':memory:'
-
-      @db = SQLite3::Database.new(@options[:filename])
+      open
       initialize_pragmas!
       initialize_schema! unless initialized?
-
       block.call(self) if block_given?
     end
 
@@ -60,12 +58,38 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Opens this database for reading or writing.
+    #
+    # If the database is already open, it is closed and reopened.
+    #
+    # @return [void]
+    # @see    #close
+    def open
+      close
+      @db = SQLite3::Database.new(@options[:filename])
+      self
+    end
+    alias_method :reopen, :open
+
+    ##
     # Returns `true` if this database is currently closed.
     #
     # @return [Boolean] `true` or `false`
     # @see    #open?
     def closed?
       @db.closed?
+    end
+
+    ##
+    # Closes this database for reading or writing.
+    #
+    # If the database is already closed, this is a no-op.
+    #
+    # @return [void]
+    # @see    #open
+    def close
+      @db.close if @db && !(@db.closed?)
+      self
     end
 
     ##

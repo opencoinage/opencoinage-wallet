@@ -15,21 +15,67 @@ describe OpenCoinage::Wallet::Database do
 
   context "Database#open?" do
     it "returns true for open databases" do
-      Database.new.should be_open
+      Database.new do |db|
+        db.open
+        db.should be_open
+      end
     end
 
     it "returns false for closed databases" do
-      pending # TODO
+      Database.new do |db|
+        db.close
+        db.should_not be_open
+      end
+    end
+  end
+
+  context "Database#open" do
+    it "opens the database" do
+      Database.new do |db|
+        db.close
+        db.should_not be_open
+        db.open
+        db.should be_open
+      end
+    end
+
+    it "returns self" do
+      Database.new do |db|
+        db.open.should == db
+      end
     end
   end
 
   context "Database#closed?" do
     it "returns false for open databases" do
-      Database.new.should_not be_closed
+      Database.new do |db|
+        db.open
+        db.should_not be_closed
+      end
     end
 
     it "returns true for closed databases" do
-      pending # TODO
+      Database.new do |db|
+        db.close
+        db.should be_closed
+      end
+    end
+  end
+
+  context "Database#close" do
+    it "closes the database" do
+      Database.new do |db|
+        db.open
+        db.should_not be_closed
+        db.close
+        db.should be_closed
+      end
+    end
+
+    it "returns self" do
+      Database.new do |db|
+        db.close.should == db
+      end
     end
   end
 
