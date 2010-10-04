@@ -13,6 +13,26 @@ describe OpenCoinage::Wallet::Database do
     # TODO
   end
 
+  context "Database#open?" do
+    it "returns true for open databases" do
+      Database.new.should be_open
+    end
+
+    it "returns false for closed databases" do
+      pending # TODO
+    end
+  end
+
+  context "Database#closed?" do
+    it "returns false for open databases" do
+      Database.new.should_not be_closed
+    end
+
+    it "returns true for closed databases" do
+      pending # TODO
+    end
+  end
+
   context "Database#options" do
     it "returns a Hash" do
       Database.new.options.should be_a Hash

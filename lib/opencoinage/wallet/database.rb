@@ -51,6 +51,24 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Returns `true` if this database is currently open.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #closed?
+    def open?
+      !(closed?)
+    end
+
+    ##
+    # Returns `true` if this database is currently closed.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #open?
+    def closed?
+      @db.closed?
+    end
+
+    ##
     # Any additional options for this database.
     #
     # @return [Hash]
