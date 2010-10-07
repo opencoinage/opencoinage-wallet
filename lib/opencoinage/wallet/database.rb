@@ -12,8 +12,6 @@ module OpenCoinage::Wallet
     FILE_EXTENSION         = '.ocdb'
     CONTENT_TYPE           = 'application/vnd.opencoinage.database'
     DEFAULT_TABLE_PREFIX   = 'opencoinage_'
-    DEFAULT_SCHEMA_VERSION = 0
-    CURRENT_SCHEMA_VERSION = 0 # FIXME
 
     ##
     # Opens the database file designated by `filename`.
@@ -84,6 +82,10 @@ module OpenCoinage::Wallet
     # Closes this database for reading or writing.
     #
     # If the database is already closed, this is a no-op.
+    #
+    # If this is a transient in-memory database, any data in the database
+    # is purged when closed; if the database is reopened, it will be
+    # uninitialized and empty.
     #
     # @return [void]
     # @see    #open
@@ -212,7 +214,22 @@ module OpenCoinage::Wallet
     # @return [void]
     # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#execute-instance_method
     def execute(sql, *args, &block)
+      prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
+      # TODO: rewrite table names in the query
       @db.execute(sql, *args, &block)
+    end
+
+    ##
+    # Executes a batch SQL query on this database.
+    #
+    # @param  [String] sql
+    #   the SQL query string to execute
+    # @return [void]
+    # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#execute_batch-instance_method
+    def execute_batch(sql, *args, &block)
+      prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
+      # TODO: rewrite table names in the query
+      @db.execute_batch(sql, *args, &block)
     end
 
     ##
@@ -280,15 +297,22 @@ module OpenCoinage::Wallet
     ##
     # Database schema migrations.
     module Schema
+      DEFAULT_VERSION = 0
+      CURRENT_VERSION = 1
+
       ##
+      # Creates the database schema.
+      #
       # @param  [Database] db
       #   the database to operate upon
       # @return [void]
       def self.create(db)
-        # TODO
+        upgrade(db)
       end
 
       ##
+      # Upgrades the database schema to the given version.
+      #
       # @param  [Database] db
       #   the database to operate upon
       # @param  [Integer]  from
@@ -296,9 +320,32 @@ module OpenCoinage::Wallet
       # @param  [Integer]  to
       #   the maximum targeted schema version
       # @return [void]
-      def self.upgrade(db, from = 0, to = -1)
-        # TODO
+      def self.upgrade(db, from = 0, to = CURRENT_VERSION)
+        from.upto(to) do |version|
+          if version > 0 && db.version < version
+            query = const_get("UPGRADE_#{version}").gsub(/\s+/, ' ').gsub(/\(\s+/, '(').gsub(/\s+\);/, ');')
+            db.execute_batch(query)
+            db.version = version
+          end
+        end
       end
+
+      UPGRADE_1 = <<-EOS
+        CREATE TABLE issuers (
+          id      INTEGER PRIMARY KEY AUTOINCREMENT,
+          uri     TEXT NOT NULL
+        );
+        CREATE TABLE currencies (
+          id      INTEGER PRIMARY KEY AUTOINCREMENT,
+          uri     TEXT NOT NULL
+        );
+        CREATE TABLE tokens (
+          id      INTEGER PRIMARY KEY AUTOINCREMENT,
+          data    BLOB NOT NULL UNIQUE,
+          amount  NUMERIC DEFAULT NULL,
+          expires INTEGER DEFAULT NULL
+        );
+      EOS
     end # Schema
   end # Database
 end # OpenCoinage::Wallet
