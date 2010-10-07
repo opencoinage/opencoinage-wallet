@@ -20,9 +20,11 @@ module OpenCoinage::Wallet
     #   the file path to the database file
     # @param  [Hash{Symbol => Object}] options
     #   any additional database options
-    # @option options [String] :password (nil)
+    # @option options [Boolean] :initialize
+    #   whether to initialize the schema automatically
+    # @option options [String]  :password (nil)
     #   a password for encrypting and decrypting data
-    # @option options [String] :prefix   (DEFAULT_TABLE_PREFIX)
+    # @option options [String]  :prefix   (DEFAULT_TABLE_PREFIX)
     #   an SQLite table prefix
     def self.open(filename, options = {}, &block)
       self.new(options.merge(:filename => filename), &block)
@@ -33,16 +35,18 @@ module OpenCoinage::Wallet
     #
     # @param  [Hash{Symbol => Object}] options
     #   any additional database options
-    # @option options [String] :password (nil)
+    # @option options [Boolean] :initialize
+    #   whether to initialize the schema automatically
+    # @option options [String]  :password (nil)
     #   a password for encrypting and decrypting data
-    # @option options [String] :prefix   (DEFAULT_TABLE_PREFIX)
+    # @option options [String]  :prefix   (DEFAULT_TABLE_PREFIX)
     #   an SQLite table prefix
     def initialize(options = {}, &block)
       @options = options.dup
       @options[:filename] ||= ':memory:'
       open
       initialize_pragmas!
-      initialize_schema! unless initialized?
+      initialize_schema! unless initialized? || options[:initialize].eql?(false)
       block.call(self) if block_given?
     end
 
@@ -233,6 +237,52 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Returns `true` if there is a transaction active currently, and `false`
+    # otherwise.
+    #
+    # @return [Boolean]
+    # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#transaction_active%3F-instance_method
+    def transaction_active?
+      @db.transaction_active?
+    end
+
+    ##
+    # Begins a new transaction on this database.
+    #
+    # If a block is given, the transaction is automatically committed when
+    # the block returns; if the block raises an exception, an automatic
+    # rollback will be performed instead.
+    #
+    # @param  [Symbol] mode
+    #   the transaction mode: `:deferred` (the default), `:immediate`, or `:exclusive`
+    # @yield
+    # @return [void]
+    # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#transaction-instance_method
+    def transaction(mode = :deferred, &block)
+      @db.transaction(mode, &block)
+    end
+
+    ##
+    # Commits the currently active transaction.
+    #
+    # @return [true]
+    # @raise  [SQLite3::SQLException] if no transaction is active
+    # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#commit-instance_method
+    def commit
+      @db.commit
+    end
+
+    ##
+    # Aborts and rolls back the currently active transaction.
+    #
+    # @return [true]
+    # @raise  [SQLite3::SQLException] if no transaction is active
+    # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#rollback-instance_method
+    def rollback
+      @db.rollback
+    end
+
+    ##
     # Enumerates the issuers in this database.
     #
     # @param  [Hash{Symbol => Object}] options
@@ -324,8 +374,10 @@ module OpenCoinage::Wallet
         from.upto(to) do |version|
           if version > 0 && db.version < version
             query = const_get("UPGRADE_#{version}").gsub(/\s+/, ' ').gsub(/\(\s+/, '(').gsub(/\s+\);/, ');')
-            db.execute_batch(query)
-            db.version = version
+            db.transaction do
+              db.execute_batch(query)
+              db.version = version
+            end
           end
         end
       end

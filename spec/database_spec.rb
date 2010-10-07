@@ -162,12 +162,16 @@ describe OpenCoinage::Wallet::Database do
       Database.new.version.should be_an Integer
     end
 
-    it "returns zero for new databases" do
-      Database.new.version.should == 0
+    it "returns zero for new uninitialized databases" do
+      Database.new(:initialize => false).version.should == 0
+    end
+
+    it "returns non-zero for new initialized databases" do
+      Database.new.version.should_not == 0
     end
 
     it "returns the database version" do
-      Database.new do |db|
+      Database.new(:initialize => false) do |db|
         db.version.should == 0
         db.execute("PRAGMA user_version = 42;")
         db.version.should == 42
@@ -185,7 +189,7 @@ describe OpenCoinage::Wallet::Database do
     end
 
     it "sets and returns the database version" do
-      Database.new do |db|
+      Database.new(:initialize => false) do |db|
         db.version.should == 0
         (db.version = 42).should == 42
         db.version.should == 42
@@ -212,6 +216,26 @@ describe OpenCoinage::Wallet::Database do
   end
 
   context "Database#execute" do
+    # TODO
+  end
+
+  context "Database#execute_batch" do
+    # TODO
+  end
+
+  context "Database#transaction_active?" do
+    # TODO
+  end
+
+  context "Database#transaction" do
+    # TODO
+  end
+
+  context "Database#commit" do
+    # TODO
+  end
+
+  context "Database#rollback" do
     # TODO
   end
 
