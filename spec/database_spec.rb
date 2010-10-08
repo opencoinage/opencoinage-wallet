@@ -215,6 +215,10 @@ describe OpenCoinage::Wallet::Database do
     end
   end
 
+  context "Database#size" do
+    # TODO
+  end
+
   context "Database#execute" do
     # TODO
   end

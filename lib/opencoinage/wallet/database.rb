@@ -211,6 +211,27 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Returns the byte size of this database.
+    #
+    # For persistent on-disk databases, returns the size of the database
+    # file.
+    #
+    # For transient in-memory databases, calculates the database size by
+    # multiplying the current page count by the page size.
+    #
+    # @return [Integer]
+    def size
+      if persistent?
+        filename.size
+      else
+        page_size  = @db.send(:get_int_pragma, 'page_size')
+        page_count = @db.send(:get_int_pragma, 'page_count')
+        page_size * page_count
+      end
+    end
+    alias_method :bytesize, :size
+
+    ##
     # Executes an SQL query on this database.
     #
     # @param  [String] sql
