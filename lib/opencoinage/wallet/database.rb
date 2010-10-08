@@ -279,6 +279,17 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Reclaims any unused space in this database.
+    #
+    # @return [void]
+    # @raise  [SQLite3::SQLException] if a transaction is active
+    # @see    http://www.sqlite.org/lang_vacuum.html
+    def compact!
+      execute('VACUUM')
+      self
+    end
+
+    ##
     # Enumerates the issuers in this database.
     #
     # @param  [Hash{Symbol => Object}] options

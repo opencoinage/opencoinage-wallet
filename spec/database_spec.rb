@@ -239,6 +239,10 @@ describe OpenCoinage::Wallet::Database do
     # TODO
   end
 
+  context "Database#compact!" do
+    # TODO
+  end
+
   context "Database#issuers" do
     it "returns an Issuer enumerator" do
       pending do
