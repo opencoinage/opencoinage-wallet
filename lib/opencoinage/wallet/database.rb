@@ -207,7 +207,9 @@ module OpenCoinage::Wallet
     #
     # @return [Boolean] `true` or `false`
     def empty?
-      !(initialized?) # FIXME
+      !(initialized?) || Schema::TABLES.all? do |table|
+        @db.get_first_value(rewrite_table_names("SELECT COUNT(id) FROM #{table}")).to_i.zero?
+      end
     end
 
     ##
