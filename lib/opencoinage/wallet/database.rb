@@ -332,7 +332,7 @@ module OpenCoinage::Wallet
     # @return [String]
     def rewrite_table_names(sql)
       prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
-      sql.gsub(/{([^}]+)}/) { |match| prefix + match[1...-1] }
+      sql.gsub(/\{([^\}]+)\}/) { |match| prefix + match[1...-1] }
     end
 
     ##
