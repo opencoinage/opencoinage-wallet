@@ -1,3 +1,5 @@
+require 'pathname'
+
 begin
   require 'opencoinage' # @see http://rubygems.org/gems/opencoinage
 rescue LoadError
