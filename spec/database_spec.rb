@@ -243,6 +243,10 @@ describe OpenCoinage::Wallet::Database do
     # TODO
   end
 
+  context "Database#clear!" do
+    # TODO
+  end
+
   context "Database#compact!" do
     # TODO
   end

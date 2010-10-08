@@ -300,6 +300,24 @@ module OpenCoinage::Wallet
     end
 
     ##
+    # Removes all data in this database.
+    #
+    # All data in all standard wallet database tables will be deleted, and
+    # the corresponding auto-increment primary key sequences will be reset
+    # to zero.
+    #
+    # @return [void]
+    def clear!
+      transaction do
+        Schema::TABLES.each do |table|
+          execute("DELETE FROM #{table}")
+          execute("DELETE FROM sqlite_sequence WHERE name = '#{table}'") # reset the auto-increment sequence
+        end
+      end
+      self
+    end
+
+    ##
     # Reclaims any unused space in this database.
     #
     # @return [void]
@@ -391,6 +409,7 @@ module OpenCoinage::Wallet
     module Schema
       DEFAULT_VERSION = 0
       CURRENT_VERSION = 1
+      TABLES          = %w({issuer} {currency} {token})
 
       ##
       # Creates the database schema.
