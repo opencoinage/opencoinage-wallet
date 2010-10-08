@@ -218,9 +218,7 @@ module OpenCoinage::Wallet
     # @return [void]
     # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#execute-instance_method
     def execute(sql, *args, &block)
-      prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
-      # TODO: rewrite table names in the query
-      @db.execute(sql, *args, &block)
+      @db.execute(rewrite_table_names(sql), *args, &block)
     end
 
     ##
@@ -231,9 +229,7 @@ module OpenCoinage::Wallet
     # @return [void]
     # @see    http://rdoc.info/github/luislavena/sqlite3-ruby/master/SQLite3/Database#execute_batch-instance_method
     def execute_batch(sql, *args, &block)
-      prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
-      # TODO: rewrite table names in the query
-      @db.execute_batch(sql, *args, &block)
+      @db.execute_batch(rewrite_table_names(sql), *args, &block)
     end
 
     ##
@@ -326,6 +322,20 @@ module OpenCoinage::Wallet
   protected
 
     ##
+    # Rewrites table names in the given SQL query to include the table
+    # prefix configured for this database.
+    #
+    # @example
+    #   db.rewrite_table_names('SELECT * FROM {currency}')  #=> 'SELECT * FROM opencoinage_currency'
+    #
+    # @param  [String] sql
+    # @return [String]
+    def rewrite_table_names(sql)
+      prefix = (options[:prefix] || DEFAULT_TABLE_PREFIX).to_s
+      sql.gsub(/{([^}]+)}/) { |match| prefix + match[1...-1] }
+    end
+
+    ##
     # Initializes the database connection.
     #
     # @return [void]
@@ -383,15 +393,15 @@ module OpenCoinage::Wallet
       end
 
       UPGRADE_1 = <<-EOS
-        CREATE TABLE issuers (
+        CREATE TABLE {issuer} (
           id      INTEGER PRIMARY KEY AUTOINCREMENT,
           uri     TEXT NOT NULL
         );
-        CREATE TABLE currencies (
+        CREATE TABLE {currency} (
           id      INTEGER PRIMARY KEY AUTOINCREMENT,
           uri     TEXT NOT NULL
         );
-        CREATE TABLE tokens (
+        CREATE TABLE {token} (
           id      INTEGER PRIMARY KEY AUTOINCREMENT,
           data    BLOB NOT NULL UNIQUE,
           amount  NUMERIC DEFAULT NULL,
